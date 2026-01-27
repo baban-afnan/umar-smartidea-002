@@ -67,7 +67,20 @@ class AdminWalletController extends Controller
 
     public function fundView()
     {
-        $users = User::select('id', 'first_name', 'last_name', 'email')->get();
+        $users = User::select('id', 'first_name', 'last_name', 'email', 'phone_no')
+            ->with(['wallet:user_id,balance'])
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'phone_no' => $user->phone_no,
+                    'balance' => $user->wallet->balance ?? 0
+                ];
+            });
+            
         return view('adminwallet.fund', compact('users'));
     }
 
@@ -93,16 +106,18 @@ class AdminWalletController extends Controller
             ]);
         }
 
-        if ($request->type === 'debit' && $wallet->balance < $request->amount) {
+        if ($request->type === 'manual_debit' && $wallet->available_balance < $request->amount) {
             return redirect()->back()->with('error', 'User have insufficient balance');
         }
 
         DB::transaction(function () use ($wallet, $request, $user) {
             if ($request->type === 'manual_credit') {
                 $wallet->increment('balance', $request->amount);
+                $wallet->increment('available_balance', $request->amount);
                 $transactionType = 'manual_credit';
             } else {
                 $wallet->decrement('balance', $request->amount);
+                $wallet->decrement('available_balance', $request->amount);
                 $transactionType = 'manual_debit';
             }
 
@@ -119,7 +134,7 @@ class AdminWalletController extends Controller
                 'net_amount' => $request->amount,
                 'performed_by' => Auth::id(),
                 'approved_by' => Auth::id(),
-                'description' => $request->description ?? ucfirst($request->type) . ' by Admin',
+                'description' => $request->description ?? ucfirst(str_replace('manual_', '', $request->type)) . ' by Admin',
                 'metadata' => [
                     'admin_id' => Auth::id(),
                     'admin_name' => Auth::user()->name ?? 'Admin',

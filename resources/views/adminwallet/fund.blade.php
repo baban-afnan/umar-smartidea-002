@@ -264,7 +264,8 @@
             const results = allUsers.filter(u =>
                 (u.first_name ?? '').toLowerCase().includes(q) ||
                 (u.last_name ?? '').toLowerCase().includes(q) ||
-                (u.email ?? '').toLowerCase().includes(q)
+                (u.email ?? '').toLowerCase().includes(q) ||
+                (u.phone_no ?? '').toLowerCase().includes(q)
             );
 
             renderResults(results);
@@ -272,7 +273,6 @@
 
         function renderResults(results) {
             searchResults.classList.remove("d-none");
-
             if (!results.length) {
                 userList.innerHTML = `
                     <div class="list-group-item text-center py-4">
@@ -281,18 +281,20 @@
                     </div>`;
                 return;
             }
-
             userList.innerHTML = results.map(u => `
                 <div class="list-group-item list-group-item-action user-item" onclick="selectUser(${u.id})">
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-md bg-primary text-white rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width:40px;height:40px;">
-                            ${u.first_name?.charAt(0).toUpperCase() ?? 'U'}
+                            ${(u.first_name || 'U').charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="fw-semibold mb-1">${u.first_name} ${u.last_name}</h6>
-                            <p class="small text-muted mb-0">${u.email}</p>
+                            <p class="small text-muted mb-0">${u.email} | ${u.phone_no || 'No Phone'}</p>
                         </div>
-                        <i class="ti ti-chevron-right text-muted"></i>
+                        <div class="text-end">
+                            <span class="badge bg-soft-success text-success">₦${parseFloat(u.balance).toLocaleString()}</span>
+                            <i class="ti ti-chevron-right text-muted ms-2"></i>
+                        </div>
                     </div>
                 </div>
             `).join("");
@@ -304,14 +306,13 @@
 
             document.getElementById("selectedUserId").value = id;
             document.getElementById("selectedUserName").textContent = selectedUser.first_name + " " + selectedUser.last_name;
-            document.getElementById("selectedUserEmail").textContent = selectedUser.email;
-            document.getElementById("userAvatar").textContent = selectedUser.first_name.charAt(0).toUpperCase();
+            document.getElementById("selectedUserEmail").innerHTML = `${selectedUser.email} | ${selectedUser.phone_no || 'No Phone'} | <span class="fw-bold text-success">Balance: ₦${parseFloat(selectedUser.balance).toLocaleString()}</span>`;
+            document.getElementById("userAvatar").textContent = (selectedUser.first_name || 'U').charAt(0).toUpperCase();
 
             document.getElementById("selectedUserCard").classList.remove("d-none");
             document.getElementById("submitBtn").disabled = false;
 
             document.querySelectorAll(".user-item").forEach(el => el.classList.remove("selected"));
-            event.currentTarget?.classList.add("selected");
         }
 
         function clearSelection() {
