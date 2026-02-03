@@ -134,9 +134,9 @@ class NinPersonalisationController extends Controller
                 // Store new file
                 $file = $request->file('file');
                 $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('nin_personalization-files', $fileName, 'public');
+                $filePath = $file->storeAs('nin-personalisation-files', $fileName, 'public');
                 $baseUrl = rtrim(config('app.url'), '/');
-                $fileUrl = $baseUrl . '/storage/nin_personalization-files/' . $fileName;
+                $fileUrl = $baseUrl . '/storage/nin-personalisation-files/' . $fileName;
             }
 
             // Update enrollment
@@ -153,11 +153,11 @@ class NinPersonalisationController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('nin_personalization.index')
+            return redirect()->route('nin-personalisation.index')
                 ->with('successMessage', 'Status updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('nin_personalization.index')
+            return redirect()->route('nin-personalisation.index')
                 ->with('errorMessage', 'Failed to update status: ' . $e->getMessage());
         }
     }

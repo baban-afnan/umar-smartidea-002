@@ -1,5 +1,5 @@
 <x-app-layout>
-    <title>Arewa Smart - NIN Personalisation details</title>
+    <title>Smart Idea - NIN Personalisation Details</title>
 
     <div class="content">
         <div class="row mb-4">
