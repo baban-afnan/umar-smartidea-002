@@ -199,7 +199,7 @@ class BvnSearchController extends Controller
 
         // Fetch price for role, fallback to base price
         $servicePrice = DB::table('service_prices')
-            ->where('service_fields_id', $serviceFieldId)
+            ->where('service_field_id', $serviceFieldId)
             ->where('user_type', $role)
             ->value('price');
 
@@ -209,8 +209,8 @@ class BvnSearchController extends Controller
             throw new \Exception('No valid price found for refund.');
         }
 
-        $refundAmount = round($basePrice * 0.8, 2);
-        $debitAmount = round($basePrice * 0.2, 2);
+        $refundAmount = round($basePrice, 2);
+        $debitAmount = 0.00;
 
         $wallet = Wallet::where('user_id', $user->id)->lockForUpdate()->first();
 
@@ -230,7 +230,7 @@ class BvnSearchController extends Controller
             'amount' => $refundAmount,
             'fee' => 0.00,
             'net_amount' => $refundAmount,
-            'description' => "Refund 80% for rejected service [{$serviceField->field_name}], Request ID #{$enrollment->id}",
+            'description' => "Refund 100% for rejected service [{$serviceField->field_name}], Request ID #{$enrollment->id}",
             'type' => 'refund',
             'status' => 'completed',
             'metadata' => json_encode([
@@ -240,8 +240,8 @@ class BvnSearchController extends Controller
                 'field_name' => $serviceField->field_name ?? null,
                 'user_role' => $role,
                 'base_price' => $basePrice,
-                'percentage_refunded' => 80,
-                'amount_debited_by_system' => $debitAmount,
+                'percentage_refunded' => 100,
+                'amount_debited_by_system' => 0.00,
                 'forced_refund' => $forceRefund,
             ]),
         ]);

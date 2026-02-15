@@ -16,6 +16,24 @@
             </div>
         </div>
 
+        <!-- SME Data Quick Access -->
+        <div class="card border-0 shadow-sm mb-4 bg-soft-info overflow-hidden">
+            <div class="card-body p-4 position-relative">
+                <div class="row align-items-center">
+                    <div class="col-md-9 position-relative z-1">
+                        <h4 class="fw-bold text-info mb-1">New: SME Data Management</h4>
+                        <p class="text-muted mb-0">Synchronize and manage SME data plans directly from ArewaSmart API.</p>
+                    </div>
+                    <div class="col-md-3 text-md-end mt-3 mt-md-0 position-relative z-1">
+                        <a href="{{ route('admin.sme-data.index') }}" class="btn btn-info px-4">
+                            Manage SME Plans <i class="ti ti-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <i class="ti ti-cloud-download position-absolute end-0 bottom-0 text-white opacity-25" style="font-size: 8rem; margin-right: -1rem; margin-bottom: -2rem;"></i>
+            </div>
+        </div>
+
         <!-- Stats -->
         <div class="row g-3 mb-4">
             <div class="col-xl-4 col-md-6 fade-in-up" style="animation-delay: 0.1s;">

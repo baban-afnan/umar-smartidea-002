@@ -40,6 +40,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::post('/transfer/verify-pin', [TransferController::class, 'verifyPin'])->name('verify.pin');
     });
 
+    // Notification Routes
+    Route::prefix('admin/notifications')->name('admin.notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('index');
+        Route::post('/send', [\App\Http\Controllers\Admin\NotificationController::class, 'send'])->name('send');
+        Route::get('/search-user', [\App\Http\Controllers\Admin\NotificationController::class, 'searchUser'])->name('search-user');
+    });
+
     // User Management Routes
     Route::prefix('users')->name('admin.users.')->group(function () {
         Route::get('/', [UserManagementController::class, 'index'])->name('index');
@@ -167,6 +174,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::post('/', [\App\Http\Controllers\Admin\DataVariationController::class, 'store'])->name('store');
         Route::put('/{dataVariation}', [\App\Http\Controllers\Admin\DataVariationController::class, 'update'])->name('update');
         Route::delete('/{dataVariation}', [\App\Http\Controllers\Admin\DataVariationController::class, 'destroy'])->name('destroy');
+    });
+
+    // SME Data Management
+    Route::prefix('admin/sme-data')->name('admin.sme-data.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SmeDataController::class, 'index'])->name('index');
+        Route::post('/sync', [\App\Http\Controllers\Admin\SmeDataController::class, 'sync'])->name('sync');
+        Route::put('/{smeData}/update', [\App\Http\Controllers\Admin\SmeDataController::class, 'update'])->name('update');
     });
 });
 
