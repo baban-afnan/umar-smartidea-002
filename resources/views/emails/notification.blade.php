@@ -59,10 +59,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <!-- Replace with actual logo URL if available -->
-            <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Smart Admin">
-        </div>
         <div class="content">
             <h1>Hello, {{ $userName }}!</h1>
             <p>{!! nl2br(e($emailContent)) !!}</p>
